@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>DSI SCANNER</title>
+<title>HealthyGO Scanner</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+/* =========================
+   THEME GREEN (HEALTHYGO)
+========================= */
 
 body{
+  margin:0;
   font-family:Arial;
-  background:#0f172a;
+  background:#071a12;
   color:white;
 }
 
 .header{
-  background:#111827;
-  padding:20px;
+  background:#052e16;
+  color:#22c55e;
+  padding:18px;
   text-align:center;
-  font-size:30px;
+  font-size:26px;
   font-weight:bold;
 }
 
@@ -40,137 +37,125 @@ body{
 
 .nav button{
   flex:1;
-  padding:16px;
+  padding:14px;
   border:none;
-  background:#1e293b;
+  background:#0b2a1a;
   color:white;
-  font-size:16px;
   font-weight:bold;
 }
 
 .nav button.active{
-  background:#2563eb;
+  background:#22c55e;
+  color:black;
 }
 
 .page{
   display:none;
-  padding:20px;
+  padding:15px;
 }
 
 .page.active{
   display:block;
 }
 
+/* SCANNER */
 #reader{
   width:100%;
-  border-radius:20px;
+  border-radius:15px;
   overflow:hidden;
-  border:4px solid #22c55e;
+  border:3px solid #22c55e;
   background:black;
 }
 
 #result{
-  margin-top:20px;
-  padding:18px;
-  border-radius:15px;
-  background:#1e293b;
+  margin-top:15px;
+  padding:15px;
+  background:#0b2a1a;
+  border-radius:12px;
   text-align:center;
-  font-size:22px;
-  font-weight:bold;
+  font-size:18px;
 }
 
+/* BUTTON */
 .controls{
   display:flex;
   gap:10px;
-  margin-top:15px;
+  margin-top:10px;
 }
 
 .controls button{
   flex:1;
-  padding:14px;
+  padding:12px;
   border:none;
-  border-radius:15px;
-  font-size:16px;
+  border-radius:10px;
   font-weight:bold;
 }
 
 .btn-camera{
-  background:#2563eb;
-  color:white;
+  background:#22c55e;
 }
 
 .btn-reset{
-  background:#374151;
+  background:#14532d;
   color:white;
 }
 
+/* CARD */
 .card{
-  background:#1e293b;
-  padding:20px;
-  border-radius:20px;
-  margin-bottom:15px;
+  background:#0b2a1a;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:10px;
 }
 
 .card-title{
-  color:#94a3b8;
-  margin-bottom:10px;
-  font-size:16px;
+  color:#86efac;
+  margin-bottom:5px;
 }
 
 .card-value{
-  font-size:36px;
+  font-size:28px;
   font-weight:bold;
 }
 
-.blue{
-  color:#60a5fa;
-}
+.blue{color:#60a5fa;}
+.green{color:#4ade80;}
+.red{color:#f87171;}
 
-.green{
-  color:#4ade80;
-}
-
-.red{
-  color:#f87171;
-}
-
+/* PROGRESS */
 .progress-container{
-  width:100%;
-  height:30px;
-  background:#334155;
-  border-radius:999px;
+  background:#1f3d2b;
+  height:25px;
+  border-radius:50px;
   overflow:hidden;
-  margin-top:10px;
 }
 
 .progress-bar{
   height:100%;
-  background:#22c55e;
   width:0%;
+  background:#22c55e;
 }
 
 .progress-text{
-  margin-top:10px;
-  font-size:20px;
+  margin-top:8px;
   font-weight:bold;
 }
 
+/* TABLE */
 .area-table{
   width:100%;
   border-collapse:collapse;
-  margin-top:20px;
 }
 
 .area-table th{
-  background:#2563eb;
-  padding:12px;
+  background:#14532d;
+  padding:10px;
 }
 
 .area-table td{
-  background:#1e293b;
-  padding:12px;
+  background:#0b2a1a;
+  padding:10px;
   text-align:center;
-  border-bottom:1px solid #334155;
 }
 
 </style>
@@ -179,418 +164,192 @@ body{
 
 <body>
 
-<div class="header">
-DSI SCANNER
-</div>
+<div class="header">HEALTHYGO SCANNER</div>
 
 <div class="nav">
-
-<button class="active"
-        onclick="showPage('scan',this)">
-SCAN
-</button>
-
-<button onclick="showPage('dashboard',this)">
-DASHBOARD
-</button>
-
+  <button class="active" onclick="showPage('scan',this)">SCAN</button>
+  <button onclick="showPage('dashboard',this)">DASHBOARD</button>
 </div>
 
 <!-- SCAN -->
+<div id="scan" class="page active">
 
-<div id="scan"
-     class="page active">
+  <div id="reader"></div>
 
-<div id="reader"></div>
+  <div id="result">Ready...</div>
 
-<div id="result">
-Loading Camera...
-</div>
-
-<div class="controls">
-
-<button class="btn-camera"
-        onclick="switchCamera()">
-Switch Camera
-</button>
-
-<button class="btn-reset"
-        onclick="resetScanner()">
-Reset
-</button>
-
-</div>
+  <div class="controls">
+    <button class="btn-camera" onclick="switchCamera()">Switch</button>
+    <button class="btn-reset" onclick="resetScanner()">Reset</button>
+  </div>
 
 </div>
 
 <!-- DASHBOARD -->
+<div id="dashboard" class="page">
 
-<div id="dashboard"
-     class="page">
+  <div class="card">
+    <div class="card-title">TOTAL QTY</div>
+    <div class="card-value blue" id="totalBox">0</div>
+  </div>
 
-<div class="card">
+  <div class="card">
+    <div class="card-title">SUDAH SCAN</div>
+    <div class="card-value green" id="scannedBox">0</div>
+  </div>
 
-<div class="card-title">
-TOTAL QTY BOX
-</div>
+  <div class="card">
+    <div class="card-title">BELUM SCAN</div>
+    <div class="card-value red" id="pendingBox">0</div>
+  </div>
 
-<div class="card-value blue"
-     id="totalBox">
-0
-</div>
+  <div class="card">
+    <div class="card-title">PROGRESS</div>
 
-</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-<div class="card">
+    <div class="progress-text" id="progressText">0%</div>
+  </div>
 
-<div class="card-title">
-QTY SUDAH DISCAN
-</div>
+  <div class="card">
+    <div class="card-title">AREA (A-Z)</div>
 
-<div class="card-value green"
-     id="scannedBox">
-0
-</div>
+    <table class="area-table">
+      <thead>
+        <tr>
+          <th>AREA</th>
+          <th>TOTAL</th>
+          <th>SCANNED</th>
+          <th>PENDING</th>
+          <th>%</th>
+        </tr>
+      </thead>
 
-</div>
+      <tbody id="areaTable"></tbody>
+    </table>
 
-<div class="card">
-
-<div class="card-title">
-QTY BELUM DISCAN
-</div>
-
-<div class="card-value red"
-     id="pendingBox">
-0
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-PROGRESS SCAN
-</div>
-
-<div class="progress-container">
-
-<div class="progress-bar"
-     id="progressBar">
-</div>
-
-</div>
-
-<div class="progress-text"
-     id="progressText">
-0%
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-SUMMARY PER AREA
-</div>
-
-<table class="area-table">
-
-<thead>
-
-<tr>
-
-<th>AREA</th>
-<th>TOTAL</th>
-<th>SCANNED</th>
-<th>PENDING</th>
-<th>%</th>
-
-</tr>
-
-</thead>
-
-<tbody id="areaTable">
-</tbody>
-
-</table>
-
-</div>
+  </div>
 
 </div>
 
 <script>
 
-const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbycsmnALJWtDrEKDICegAFs3jKHTtWvloIOQzWevT9OUAByQtvj4Skikf1DJg94c-rC/exec";
+const WEB_APP_URL = "YOUR_WEBAPP_URL_HERE";
 
 let scanner;
-
 let currentCamera = "environment";
-
 let lastScan = "";
 
+// PAGE
 function showPage(page,btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p => {
-      p.classList.remove("active");
-    });
-
-  document
-    .getElementById(page)
-    .classList.add("active");
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(b => {
-      b.classList.remove("active");
-    });
-
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 
-  if(page == "dashboard"){
-
-    loadDashboard();
-
-  }
-
+  if(page==="dashboard") loadDashboard();
 }
 
-function beep(){
+// STATUS COLOR
+function updateStatus(text,type="info"){
+  const el=document.getElementById("result");
+  el.innerHTML=text;
 
-  const audio =
-    new Audio(
-      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-    );
-
-  audio.play();
-
+  if(type==="success") el.style.color="#4ade80";
+  else if(type==="error") el.style.color="#f87171";
+  else el.style.color="white";
 }
 
-function vibrate(){
-
-  if(navigator.vibrate){
-
-    navigator.vibrate(200);
-
-  }
-
-}
-
-function updateStatus(text){
-
-  document
-    .getElementById("result")
-    .innerHTML = text;
-
-}
-
+// SCAN
 function onScanSuccess(decodedText){
 
-  if(decodedText == lastScan){
-    return;
-  }
+  if(decodedText===lastScan) return;
+  lastScan=decodedText;
 
-  lastScan = decodedText;
+  updateStatus("Scanning: "+decodedText);
 
-  beep();
-
-  vibrate();
-
-  updateStatus(
-    "Scanning : " + decodedText
-  );
-
-  fetch(WEB_APP_URL, {
-
+  fetch(WEB_APP_URL,{
     method:"POST",
-
-    mode:"cors",
-
-    headers:{
-      "Content-Type":"text/plain"
-    },
-
-    body:JSON.stringify({
-      boxId:decodedText
-    })
-
+    body:JSON.stringify({boxId:decodedText})
   })
+  .then(r=>r.text())
+  .then(data=>{
 
-  .then(res => res.text())
-
-  .then(data => {
-
-    updateStatus(data);
+    if(data==="SCAN BERHASIL") updateStatus(data,"success");
+    else updateStatus(data,"error");
 
     loadDashboard();
 
-    setTimeout(() => {
-
-      lastScan = "";
-
-    },3000);
-
+    setTimeout(()=>lastScan="",3000);
   })
-
-  .catch(err => {
-
-    updateStatus(err);
-
-  });
-
+  .catch(err=>updateStatus(err,"error"));
 }
 
+// CAMERA
 async function startScanner(){
-
-  scanner =
-    new Html5Qrcode("reader");
+  scanner=new Html5Qrcode("reader");
 
   await scanner.start(
-
-    {
-      facingMode:currentCamera
-    },
-
-    {
-      fps:10,
-
-      qrbox:{
-        width:250,
-        height:250
-      }
-
-    },
-
+    {facingMode:currentCamera},
+    {fps:10,qrbox:250},
     onScanSuccess
-
   );
-
-  updateStatus(
-    "📷 Camera Ready"
-  );
-
 }
 
 async function switchCamera(){
-
-  try{
-
-    await scanner.stop();
-
-    currentCamera =
-      currentCamera == "environment"
-      ? "user"
-      : "environment";
-
-    startScanner();
-
-  }
-
-  catch(err){
-
-    updateStatus(err);
-
-  }
-
+  await scanner.stop();
+  currentCamera=currentCamera==="environment"?"user":"environment";
+  startScanner();
 }
 
 function resetScanner(){
-
-  lastScan = "";
-
-  updateStatus(
-    "Scanner Reset"
-  );
-
+  lastScan="";
+  updateStatus("Reset");
 }
 
-async function loadDashboard(){
+// DASHBOARD
+function loadDashboard(){
 
-  try{
+  fetch(WEB_APP_URL+"?dashboard=1")
+  .then(r=>r.json())
+  .then(data=>{
 
-    const res =
-      await fetch(
-        WEB_APP_URL + "?dashboard=1"
-      );
+    document.getElementById("totalBox").innerHTML=data.total;
+    document.getElementById("scannedBox").innerHTML=data.scanned;
+    document.getElementById("pendingBox").innerHTML=data.pending;
 
-    const data =
-      await res.json();
+    document.getElementById("progressBar").style.width=data.progress+"%";
+    document.getElementById("progressText").innerHTML=data.progress+"%";
 
-    document
-      .getElementById("totalBox")
-      .innerHTML =
-      data.total;
+    let html="";
 
-    document
-      .getElementById("scannedBox")
-      .innerHTML =
-      data.scanned;
+    data.areas
+      .sort((a,b)=>a.area.localeCompare(b.area)) // A-Z
+      .forEach(a=>{
 
-    document
-      .getElementById("pendingBox")
-      .innerHTML =
-      data.pending;
+        html+=`
+        <tr>
+          <td>${a.area}</td>
+          <td>${a.total}</td>
+          <td>${a.scanned}</td>
+          <td>${a.pending}</td>
+          <td>${a.progress}%</td>
+        </tr>`;
+      });
 
-    document
-      .getElementById("progressBar")
-      .style.width =
-      data.progress + "%";
+    document.getElementById("areaTable").innerHTML=html;
 
-    document
-      .getElementById("progressText")
-      .innerHTML =
-      data.progress + "%";
-
-    let html = "";
-
-    data.areas.forEach(a => {
-
-      html += `
-
-      <tr>
-
-        <td>${a.area}</td>
-
-        <td>${a.total}</td>
-
-        <td>${a.scanned}</td>
-
-        <td>${a.pending}</td>
-
-        <td>${a.progress}%</td>
-
-      </tr>
-
-      `;
-
-    });
-
-    document
-      .getElementById("areaTable")
-      .innerHTML =
-      html;
-
-  }
-
-  catch(err){
-
-    console.log(err);
-
-  }
-
+  });
 }
 
 startScanner();
-
 loadDashboard();
-
 setInterval(loadDashboard,5000);
 
 </script>
 
 </body>
-
 </html>
