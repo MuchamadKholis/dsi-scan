@@ -4,9 +4,11 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>DSI SCANNER</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>DSI BOX SCANNER</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
@@ -19,27 +21,44 @@
 }
 
 body{
-  font-family:Arial, sans-serif;
-  background:#111827;
+  font-family:Arial;
+  background:#0f172a;
   color:white;
+}
+
+.header{
+  background:#111827;
+  padding:20px;
   text-align:center;
+  font-size:30px;
+  font-weight:bold;
+}
+
+.nav{
+  display:flex;
+}
+
+.nav button{
+  flex:1;
+  padding:16px;
+  border:none;
+  background:#1e293b;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.nav button.active{
+  background:#2563eb;
+}
+
+.page{
+  display:none;
   padding:20px;
 }
 
-.container{
-  max-width:420px;
-  margin:auto;
-}
-
-.title{
-  font-size:32px;
-  font-weight:bold;
-  margin-bottom:10px;
-}
-
-.subtitle{
-  color:#9ca3af;
-  margin-bottom:20px;
+.page.active{
+  display:block;
 }
 
 #reader{
@@ -50,54 +69,29 @@ body{
   background:black;
 }
 
-.status-box{
+#result{
   margin-top:20px;
-  padding:15px;
+  padding:18px;
   border-radius:15px;
-  font-size:20px;
+  background:#1e293b;
+  text-align:center;
+  font-size:22px;
   font-weight:bold;
-  background:#1f2937;
-  min-height:80px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-}
-
-.success{
-  background:#14532d !important;
-  color:#4ade80;
-}
-
-.error{
-  background:#7f1d1d !important;
-  color:#f87171;
-}
-
-.info{
-  background:#1e3a8a !important;
-  color:#60a5fa;
 }
 
 .controls{
-  margin-top:20px;
   display:flex;
   gap:10px;
+  margin-top:15px;
 }
 
-button{
+.controls button{
   flex:1;
   padding:14px;
   border:none;
-  border-radius:12px;
+  border-radius:15px;
   font-size:16px;
   font-weight:bold;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-button:hover{
-  opacity:0.9;
 }
 
 .btn-camera{
@@ -110,27 +104,80 @@ button:hover{
   color:white;
 }
 
-.scan-history{
-  margin-top:25px;
-  text-align:left;
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:15px;
 }
 
-.scan-history h3{
+.card-title{
+  color:#94a3b8;
   margin-bottom:10px;
+  font-size:16px;
 }
 
-.history-item{
-  background:#1f2937;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:8px;
-  font-size:14px;
+.card-value{
+  font-size:36px;
+  font-weight:bold;
+}
+
+.blue{
+  color:#60a5fa;
+}
+
+.green{
+  color:#4ade80;
+}
+
+.red{
+  color:#f87171;
+}
+
+.progress-container{
+  width:100%;
+  height:30px;
+  background:#334155;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.progress-bar{
+  height:100%;
+  background:#22c55e;
+  width:0%;
+  transition:0.3s;
+}
+
+.progress-text{
+  margin-top:10px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.area-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+}
+
+.area-table th{
+  background:#2563eb;
+  padding:12px;
+}
+
+.area-table td{
+  background:#1e293b;
+  padding:12px;
+  text-align:center;
+  border-bottom:1px solid #334155;
 }
 
 .footer{
-  margin-top:25px;
-  color:#6b7280;
-  font-size:13px;
+  text-align:center;
+  padding:20px;
+  color:#64748b;
 }
 
 </style>
@@ -139,20 +186,32 @@ button:hover{
 
 <body>
 
-<div class="container">
-
-<div class="title">
+<div class="header">
 DSI SCANNER
 </div>
 
-<div class="subtitle">
-Warehouse QR Box Scanner
+<div class="nav">
+
+<button class="active"
+        onclick="showPage('scan',this)">
+SCAN
+</button>
+
+<button onclick="showPage('dashboard',this)">
+DASHBOARD
+</button>
+
 </div>
+
+<!-- SCAN PAGE -->
+
+<div id="scan"
+     class="page active">
 
 <div id="reader"></div>
 
-<div id="result" class="status-box info">
-Starting Camera...
+<div id="result">
+Loading Camera...
 </div>
 
 <div class="controls">
@@ -169,30 +228,144 @@ Reset
 
 </div>
 
-<div class="scan-history">
+</div>
 
-<h3>Recent Scan</h3>
+<!-- DASHBOARD -->
 
-<div id="history"></div>
+<div id="dashboard"
+     class="page">
+
+<div class="card">
+
+<div class="card-title">
+TOTAL BOX
+</div>
+
+<div class="card-value blue"
+     id="totalBox">
+0
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+BOX SUDAH DISCAN
+</div>
+
+<div class="card-value green"
+     id="scannedBox">
+0
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+BOX BELUM DISCAN
+</div>
+
+<div class="card-value red"
+     id="pendingBox">
+0
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+PROGRESS SCAN
+</div>
+
+<div class="progress-container">
+
+<div class="progress-bar"
+     id="progressBar">
+</div>
+
+</div>
+
+<div class="progress-text"
+     id="progressText">
+0%
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+AREA SUMMARY
+</div>
+
+<table class="area-table">
+
+<thead>
+
+<tr>
+<th>AREA</th>
+<th>TOTAL</th>
+<th>SCAN</th>
+<th>PENDING</th>
+<th>%</th>
+</tr>
+
+</thead>
+
+<tbody id="areaTable">
+</tbody>
+
+</table>
+
+</div>
 
 </div>
 
 <div class="footer">
-Powered by KHOLIS
-</div>
-
+Powered by Dapur Sehat Indonesia
 </div>
 
 <script>
 
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbzagb0Z61W55ZBHlgE23FbwXCqca3wz3YvO4KMbiQm-n9qSV_iwZonSQIAisC3zBEc/exec";
+"https://script.google.com/macros/s/AKfycbwUf3um0YoG_hZLxeUDClCN3yDsSO6l9zA-WdzGubM16ap_aMuSnhLmiTCh6k_qug_t/exec";
 
 let scanner;
 
 let currentCamera = "environment";
 
 let lastScan = "";
+
+function showPage(page,btn){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p => {
+      p.classList.remove("active");
+    });
+
+  document
+    .getElementById(page)
+    .classList.add("active");
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(b => {
+      b.classList.remove("active");
+    });
+
+  btn.classList.add("active");
+
+  if(page == "dashboard"){
+
+    loadDashboard();
+
+  }
+
+}
 
 function beep(){
 
@@ -215,35 +388,11 @@ function vibrate(){
 
 }
 
-function updateStatus(message,type){
+function updateStatus(text){
 
-  const result =
-    document.getElementById("result");
-
-  result.className =
-    "status-box " + type;
-
-  result.innerHTML = message;
-
-}
-
-function addHistory(text){
-
-  const history =
-    document.getElementById("history");
-
-  const item =
-    document.createElement("div");
-
-  item.className = "history-item";
-
-  item.innerHTML =
-    `
-    <b>${text}</b><br>
-    ${new Date().toLocaleTimeString()}
-    `;
-
-  history.prepend(item);
+  document
+    .getElementById("result")
+    .innerHTML = text;
 
 }
 
@@ -260,8 +409,7 @@ function onScanSuccess(decodedText){
   vibrate();
 
   updateStatus(
-    "Scanning : " + decodedText,
-    "info"
+    "Scanning : " + decodedText
   );
 
   fetch(WEB_APP_URL, {
@@ -284,25 +432,9 @@ function onScanSuccess(decodedText){
 
   .then(data => {
 
-    if(data.includes("BERHASIL")){
+    updateStatus(data);
 
-      updateStatus(
-        "✅ " + data,
-        "success"
-      );
-
-    }
-
-    else{
-
-      updateStatus(
-        "❌ " + data,
-        "error"
-      );
-
-    }
-
-    addHistory(decodedText);
+    loadDashboard();
 
     setTimeout(() => {
 
@@ -314,10 +446,7 @@ function onScanSuccess(decodedText){
 
   .catch(err => {
 
-    updateStatus(
-      "ERROR : " + err,
-      "error"
-    );
+    updateStatus(err);
 
   });
 
@@ -349,8 +478,7 @@ async function startScanner(){
   );
 
   updateStatus(
-    "📷 Camera Ready",
-    "info"
+    "📷 Camera Ready"
   );
 
 }
@@ -372,10 +500,7 @@ async function switchCamera(){
 
   catch(err){
 
-    updateStatus(
-      err,
-      "error"
-    );
+    updateStatus(err);
 
   }
 
@@ -386,16 +511,95 @@ function resetScanner(){
   lastScan = "";
 
   updateStatus(
-    "Scanner Reset",
-    "info"
+    "Scanner Reset"
   );
+
+}
+
+async function loadDashboard(){
+
+  try{
+
+    const res =
+      await fetch(
+        WEB_APP_URL + "?dashboard=1"
+      );
+
+    const data =
+      await res.json();
+
+    document
+      .getElementById("totalBox")
+      .innerHTML =
+      data.total;
+
+    document
+      .getElementById("scannedBox")
+      .innerHTML =
+      data.scanned;
+
+    document
+      .getElementById("pendingBox")
+      .innerHTML =
+      data.pending;
+
+    document
+      .getElementById("progressBar")
+      .style.width =
+      data.progress + "%";
+
+    document
+      .getElementById("progressText")
+      .innerHTML =
+      data.progress + "%";
+
+    let html = "";
+
+    data.areas.forEach(a => {
+
+      html += `
+
+      <tr>
+
+        <td>${a.area}</td>
+
+        <td>${a.total}</td>
+
+        <td>${a.scanned}</td>
+
+        <td>${a.pending}</td>
+
+        <td>${a.progress}%</td>
+
+      </tr>
+
+      `;
+
+    });
+
+    document
+      .getElementById("areaTable")
+      .innerHTML =
+      html;
+
+  }
+
+  catch(err){
+
+    console.log(err);
+
+  }
 
 }
 
 startScanner();
 
+loadDashboard();
+
+setInterval(loadDashboard,5000);
+
 </script>
 
 </body>
 
-</html>	
+</html>
