@@ -8,7 +8,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>DSI BOX SCANNER</title>
+<title>DSI SCANNER</title>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
@@ -147,7 +147,6 @@ body{
   height:100%;
   background:#22c55e;
   width:0%;
-  transition:0.3s;
 }
 
 .progress-text{
@@ -174,12 +173,6 @@ body{
   border-bottom:1px solid #334155;
 }
 
-.footer{
-  text-align:center;
-  padding:20px;
-  color:#64748b;
-}
-
 </style>
 
 </head>
@@ -203,7 +196,7 @@ DASHBOARD
 
 </div>
 
-<!-- SCAN PAGE -->
+<!-- SCAN -->
 
 <div id="scan"
      class="page active">
@@ -238,7 +231,7 @@ Reset
 <div class="card">
 
 <div class="card-title">
-TOTAL BOX
+TOTAL QTY BOX
 </div>
 
 <div class="card-value blue"
@@ -251,7 +244,7 @@ TOTAL BOX
 <div class="card">
 
 <div class="card-title">
-BOX SUDAH DISCAN
+QTY SUDAH DISCAN
 </div>
 
 <div class="card-value green"
@@ -264,7 +257,7 @@ BOX SUDAH DISCAN
 <div class="card">
 
 <div class="card-title">
-BOX BELUM DISCAN
+QTY BELUM DISCAN
 </div>
 
 <div class="card-value red"
@@ -298,7 +291,7 @@ PROGRESS SCAN
 <div class="card">
 
 <div class="card-title">
-AREA SUMMARY
+SUMMARY PER AREA
 </div>
 
 <table class="area-table">
@@ -306,11 +299,13 @@ AREA SUMMARY
 <thead>
 
 <tr>
+
 <th>AREA</th>
 <th>TOTAL</th>
-<th>SCAN</th>
+<th>SCANNED</th>
 <th>PENDING</th>
 <th>%</th>
+
 </tr>
 
 </thead>
@@ -324,14 +319,10 @@ AREA SUMMARY
 
 </div>
 
-<div class="footer">
-Powered by Dapur Sehat Indonesia
-</div>
-
 <script>
 
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbwUf3um0YoG_hZLxeUDClCN3yDsSO6l9zA-WdzGubM16ap_aMuSnhLmiTCh6k_qug_t/exec";
+"https://script.google.com/macros/s/AKfycbycsmnALJWtDrEKDICegAFs3jKHTtWvloIOQzWevT9OUAByQtvj4Skikf1DJg94c-rC/exec";
 
 let scanner;
 
