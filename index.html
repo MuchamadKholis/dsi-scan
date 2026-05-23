@@ -1,595 +1,190 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 
 <head>
 
-<meta charset="UTF-8">
+  <base target="_top">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+  <style>
 
-<title>DSI Box Scanner</title>
+    body{
 
-<script src="https://unpkg.com/html5-qrcode"></script>
+      font-family: Arial;
+      background:#f5f5f5;
+      text-align:center;
+      padding-top:50px;
 
-<style>
+    }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+    .container{
 
-body{
-  font-family:Arial;
-  background:#0f172a;
-  color:white;
-}
+      width:400px;
+      margin:auto;
+      background:white;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 0 10px rgba(0,0,0,0.1);
 
-.header{
-  background:#111827;
-  padding:20px;
-  text-align:center;
-  font-size:30px;
-  font-weight:bold;
-}
+    }
 
-.nav{
-  display:flex;
-}
+    h1{
 
-.nav button{
-  flex:1;
-  padding:16px;
-  border:none;
-  background:#1e293b;
-  color:white;
-  font-size:16px;
-  font-weight:bold;
-}
+      margin-bottom:30px;
 
-.nav button.active{
-  background:#2563eb;
-}
+    }
 
-.page{
-  display:none;
-  padding:20px;
-}
+    input{
 
-.page.active{
-  display:block;
-}
+      width:100%;
+      padding:15px;
+      font-size:20px;
+      text-align:center;
+      box-sizing:border-box;
 
-#reader{
-  width:100%;
-  border-radius:20px;
-  overflow:hidden;
-  border:4px solid #22c55e;
-  background:black;
-}
+    }
 
-#result{
-  margin-top:20px;
-  padding:18px;
-  border-radius:15px;
-  background:#1e293b;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-}
+    #result{
 
-.controls{
-  display:flex;
-  gap:10px;
-  margin-top:15px;
-}
+      margin-top:25px;
+      font-size:28px;
+      font-weight:bold;
 
-.controls button{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:15px;
-  font-size:16px;
-  font-weight:bold;
-}
+    }
 
-.btn-camera{
-  background:#2563eb;
-  color:white;
-}
+    .success{
 
-.btn-reset{
-  background:#374151;
-  color:white;
-}
+      color:green;
 
-.card{
-  background:#1e293b;
-  padding:20px;
-  border-radius:20px;
-  margin-bottom:15px;
-}
+    }
 
-.card-title{
-  color:#94a3b8;
-  margin-bottom:10px;
-  font-size:16px;
-}
+    .error{
 
-.card-value{
-  font-size:36px;
-  font-weight:bold;
-}
+      color:red;
 
-.blue{
-  color:#60a5fa;
-}
+    }
 
-.green{
-  color:#4ade80;
-}
-
-.red{
-  color:#f87171;
-}
-
-.progress-container{
-  width:100%;
-  height:30px;
-  background:#334155;
-  border-radius:999px;
-  overflow:hidden;
-  margin-top:10px;
-}
-
-.progress-bar{
-  height:100%;
-  background:#22c55e;
-  width:0%;
-}
-
-.progress-text{
-  margin-top:10px;
-  font-size:20px;
-  font-weight:bold;
-}
-
-.area-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:20px;
-}
-
-.area-table th{
-  background:#2563eb;
-  padding:12px;
-}
-
-.area-table td{
-  background:#1e293b;
-  padding:12px;
-  text-align:center;
-  border-bottom:1px solid #334155;
-}
-
-</style>
+  </style>
 
 </head>
 
 <body>
 
-<div class="header">
-DSI SCANNER
-</div>
+  <div class="container">
 
-<div class="nav">
+    <h1>SCAN BOX</h1>
 
-<button class="active"
-        onclick="showPage('scan',this)">
-SCAN
-</button>
+    <input
+      type="text"
+      id="barcode"
+      placeholder="SCAN BARCODE..."
+      autofocus
+    >
 
-<button onclick="showPage('dashboard',this)">
-DASHBOARD
-</button>
+    <div id="result"></div>
 
-</div>
+  </div>
 
-<!-- SCAN -->
+  <script>
 
-<div id="scan"
-     class="page active">
+    // GANTI DENGAN URL WEB APP APPS SCRIPT
+    const WEB_APP_URL =
+      "PASTE_WEB_APP_URL_DISINI";
 
-<div id="reader"></div>
+    const input =
+      document.getElementById("barcode");
 
-<div id="result">
-Loading Camera...
-</div>
+    const result =
+      document.getElementById("result");
 
-<div class="controls">
+    // AUTO FOCUS
+    setInterval(() => {
 
-<button class="btn-camera"
-        onclick="switchCamera()">
-Switch Camera
-</button>
+      input.focus();
 
-<button class="btn-reset"
-        onclick="resetScanner()">
-Reset
-</button>
+    }, 1000);
 
-</div>
+    // ENTER SETELAH SCAN
+    input.addEventListener(
+      "keypress",
+      function(e){
 
-</div>
+        if(e.key === "Enter"){
 
-<!-- DASHBOARD -->
+          const barcode =
+            input.value.trim();
 
-<div id="dashboard"
-     class="page">
+          // JIKA KOSONG
+          if(barcode == ""){
 
-<div class="card">
+            return;
 
-<div class="card-title">
-TOTAL QTY BOX
-</div>
+          }
 
-<div class="card-value blue"
-     id="totalBox">
-0
-</div>
+          // TAMPILKAN LOADING
+          result.innerHTML =
+            "PROCESSING...";
 
-</div>
+          result.className = "";
 
-<div class="card">
+          fetch(
+            WEB_APP_URL,
+            {
 
-<div class="card-title">
-QTY SUDAH DISCAN
-</div>
+              method:"POST",
 
-<div class="card-value green"
-     id="scannedBox">
-0
-</div>
+              body:JSON.stringify({
 
-</div>
+                boxId: barcode
 
-<div class="card">
+              })
 
-<div class="card-title">
-QTY BELUM DISCAN
-</div>
+            }
+          )
 
-<div class="card-value red"
-     id="pendingBox">
-0
-</div>
+          .then(response => response.text())
 
-</div>
+          .then(msg => {
 
-<div class="card">
+            result.innerHTML = msg;
 
-<div class="card-title">
-PROGRESS SCAN
-</div>
+            // WARNA HIJAU
+            if(msg == "SCAN BERHASIL"){
 
-<div class="progress-container">
+              result.className =
+                "success";
 
-<div class="progress-bar"
-     id="progressBar">
-</div>
+            }
 
-</div>
+            // WARNA MERAH
+            else{
 
-<div class="progress-text"
-     id="progressText">
-0%
-</div>
+              result.className =
+                "error";
 
-</div>
+            }
 
-<div class="card">
+            // RESET INPUT
+            input.value = "";
 
-<div class="card-title">
-SUMMARY PER AREA
-</div>
+            input.focus();
 
-<table class="area-table">
+          })
 
-<thead>
+          .catch(err => {
 
-<tr>
+            result.innerHTML =
+              "ERROR CONNECTION";
 
-<th>AREA</th>
-<th>TOTAL</th>
-<th>SCANNED</th>
-<th>PENDING</th>
-<th>%</th>
+            result.className =
+              "error";
 
-</tr>
+          });
 
-</thead>
+        }
 
-<tbody id="areaTable">
-</tbody>
+      });
 
-</table>
-
-</div>
-
-</div>
-
-<script>
-
-const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbycsmnALJWtDrEKDICegAFs3jKHTtWvloIOQzWevT9OUAByQtvj4Skikf1DJg94c-rC/exec";
-
-let scanner;
-
-let currentCamera = "environment";
-
-let lastScan = "";
-
-function showPage(page,btn){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(p => {
-      p.classList.remove("active");
-    });
-
-  document
-    .getElementById(page)
-    .classList.add("active");
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(b => {
-      b.classList.remove("active");
-    });
-
-  btn.classList.add("active");
-
-  if(page == "dashboard"){
-
-    loadDashboard();
-
-  }
-
-}
-
-function beep(){
-
-  const audio =
-    new Audio(
-      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-    );
-
-  audio.play();
-
-}
-
-function vibrate(){
-
-  if(navigator.vibrate){
-
-    navigator.vibrate(200);
-
-  }
-
-}
-
-function updateStatus(text){
-
-  document
-    .getElementById("result")
-    .innerHTML = text;
-
-}
-
-function onScanSuccess(decodedText){
-
-  if(decodedText == lastScan){
-    return;
-  }
-
-  lastScan = decodedText;
-
-  beep();
-
-  vibrate();
-
-  updateStatus(
-    "Scanning : " + decodedText
-  );
-
-  fetch(WEB_APP_URL, {
-
-    method:"POST",
-
-    mode:"cors",
-
-    headers:{
-      "Content-Type":"text/plain"
-    },
-
-    body:JSON.stringify({
-      boxId:decodedText
-    })
-
-  })
-
-  .then(res => res.text())
-
-  .then(data => {
-
-    updateStatus(data);
-
-    loadDashboard();
-
-    setTimeout(() => {
-
-      lastScan = "";
-
-    },3000);
-
-  })
-
-  .catch(err => {
-
-    updateStatus(err);
-
-  });
-
-}
-
-async function startScanner(){
-
-  scanner =
-    new Html5Qrcode("reader");
-
-  await scanner.start(
-
-    {
-      facingMode:currentCamera
-    },
-
-    {
-      fps:10,
-
-      qrbox:{
-        width:250,
-        height:250
-      }
-
-    },
-
-    onScanSuccess
-
-  );
-
-  updateStatus(
-    "📷 Camera Ready"
-  );
-
-}
-
-async function switchCamera(){
-
-  try{
-
-    await scanner.stop();
-
-    currentCamera =
-      currentCamera == "environment"
-      ? "user"
-      : "environment";
-
-    startScanner();
-
-  }
-
-  catch(err){
-
-    updateStatus(err);
-
-  }
-
-}
-
-function resetScanner(){
-
-  lastScan = "";
-
-  updateStatus(
-    "Scanner Reset"
-  );
-
-}
-
-async function loadDashboard(){
-
-  try{
-
-    const res =
-      await fetch(
-        WEB_APP_URL + "?dashboard=1"
-      );
-
-    const data =
-      await res.json();
-
-    document
-      .getElementById("totalBox")
-      .innerHTML =
-      data.total;
-
-    document
-      .getElementById("scannedBox")
-      .innerHTML =
-      data.scanned;
-
-    document
-      .getElementById("pendingBox")
-      .innerHTML =
-      data.pending;
-
-    document
-      .getElementById("progressBar")
-      .style.width =
-      data.progress + "%";
-
-    document
-      .getElementById("progressText")
-      .innerHTML =
-      data.progress + "%";
-
-    let html = "";
-
-    data.areas.forEach(a => {
-
-      html += `
-
-      <tr>
-
-        <td>${a.area}</td>
-
-        <td>${a.total}</td>
-
-        <td>${a.scanned}</td>
-
-        <td>${a.pending}</td>
-
-        <td>${a.progress}%</td>
-
-      </tr>
-
-      `;
-
-    });
-
-    document
-      .getElementById("areaTable")
-      .innerHTML =
-      html;
-
-  }
-
-  catch(err){
-
-    console.log(err);
-
-  }
-
-}
-
-startScanner();
-
-loadDashboard();
-
-setInterval(loadDashboard,5000);
-
-</script>
+  </script>
 
 </body>
 
