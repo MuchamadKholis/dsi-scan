@@ -22,15 +22,15 @@
 
 body{
   font-family:Arial;
-  background:#0f172a;
+  background:#020617;
   color:white;
 }
 
 .header{
-  background:#111827;
-  padding:20px;
+  background:#0f172a;
+  padding:22px;
   text-align:center;
-  font-size:30px;
+  font-size:28px;
   font-weight:bold;
 }
 
@@ -54,12 +54,16 @@ body{
 
 .page{
   display:none;
-  padding:20px;
+  padding:16px;
 }
 
 .page.active{
   display:block;
 }
+
+/* =========================
+SCANNER
+========================= */
 
 #reader{
   width:100%;
@@ -70,12 +74,12 @@ body{
 }
 
 #result{
-  margin-top:20px;
-  padding:18px;
+  margin-top:15px;
+  padding:16px;
   border-radius:15px;
   background:#1e293b;
   text-align:center;
-  font-size:22px;
+  font-size:20px;
   font-weight:bold;
 }
 
@@ -90,7 +94,7 @@ body{
   padding:14px;
   border:none;
   border-radius:15px;
-  font-size:16px;
+  font-size:15px;
   font-weight:bold;
 }
 
@@ -104,22 +108,57 @@ body{
   color:white;
 }
 
+/* =========================
+CARD GRID
+========================= */
+
+.dashboard-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:12px;
+
+}
+
 .card{
+
   background:#1e293b;
-  padding:20px;
+
+  padding:16px;
+
   border-radius:20px;
-  margin-bottom:15px;
+
+  min-height:110px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
 }
 
 .card-title{
+
   color:#94a3b8;
+
+  font-size:13px;
+
   margin-bottom:10px;
-  font-size:16px;
+
 }
 
 .card-value{
-  font-size:36px;
+
+  font-size:42px;
+
   font-weight:bold;
+
+  line-height:1;
+
 }
 
 .blue{
@@ -134,22 +173,88 @@ body{
   color:#f87171;
 }
 
+/* =========================
+TABLE
+========================= */
+
+.table-card{
+
+  margin-top:18px;
+
+  background:#1e293b;
+
+  padding:18px;
+
+  border-radius:20px;
+
+  overflow:auto;
+
+}
+
+.table-title{
+
+  font-size:22px;
+
+  font-weight:bold;
+
+  margin-bottom:15px;
+
+}
+
 .area-table{
+
   width:100%;
+
   border-collapse:collapse;
-  margin-top:20px;
+
 }
 
 .area-table th{
+
   background:#2563eb;
+
   padding:12px;
+
+  font-size:14px;
+
 }
 
 .area-table td{
-  background:#1e293b;
+
+  background:#0f172a;
+
   padding:12px;
+
   text-align:center;
+
   border-bottom:1px solid #334155;
+
+  font-size:14px;
+
+}
+
+.pending{
+
+  color:#f87171;
+
+  font-weight:bold;
+
+}
+
+/* =========================
+MOBILE
+========================= */
+
+@media(max-width:700px){
+
+  .card-value{
+    font-size:32px;
+  }
+
+  .card{
+    min-height:95px;
+  }
+
 }
 
 </style>
@@ -175,7 +280,9 @@ DASHBOARD
 
 </div>
 
-<!-- SCAN -->
+<!-- =========================
+SCAN PAGE
+========================= -->
 
 <div id="scan"
      class="page active">
@@ -202,10 +309,14 @@ Reset
 
 </div>
 
-<!-- DASHBOARD -->
+<!-- =========================
+DASHBOARD PAGE
+========================= -->
 
 <div id="dashboard"
      class="page">
+
+<div class="dashboard-grid">
 
 <div class="card">
 <div class="card-title">QTY BOX</div>
@@ -261,9 +372,13 @@ Reset
      id="bkPending">0</div>
 </div>
 
-<div class="card">
+</div>
 
-<div class="card-title">
+<!-- TABLE -->
+
+<div class="table-card">
+
+<div class="table-title">
 SUMMARY PER AREA
 </div>
 
@@ -295,7 +410,7 @@ SUMMARY PER AREA
 <script>
 
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbwetKORKAOoPlKtZFoW_ovR0wwN5Cc5Ivb6GI2iKoDnU_S9eN-HT2dNtBZUtAS3gWtg/exec";
+"PASTE_WEB_APP_URL_DISINI";
 
 let scanner;
 
@@ -303,7 +418,9 @@ let currentCamera = "environment";
 
 let lastScan = "";
 
-// NAVIGATION
+/* =========================
+NAVIGATION
+========================= */
 
 function showPage(page,btn){
 
@@ -331,7 +448,9 @@ function showPage(page,btn){
 
 }
 
-// SOUND
+/* =========================
+BEEP
+========================= */
 
 function beep(){
 
@@ -344,7 +463,9 @@ function beep(){
 
 }
 
-// VIBRATE
+/* =========================
+VIBRATE
+========================= */
 
 function vibrate(){
 
@@ -354,7 +475,9 @@ function vibrate(){
 
 }
 
-// STATUS COLOR
+/* =========================
+STATUS
+========================= */
 
 function updateStatus(text){
 
@@ -366,6 +489,7 @@ function updateStatus(text){
   result.style.color = "white";
   result.style.background = "#1e293b";
 
+  // SUCCESS
   if(text.includes("SCAN BERHASIL")){
 
     result.style.color = "#4ade80";
@@ -373,6 +497,7 @@ function updateStatus(text){
 
   }
 
+  // ERROR
   else if(
 
     text.includes("BOX TIDAK DITEMUKAN") ||
@@ -390,7 +515,9 @@ function updateStatus(text){
 
 }
 
-// SCAN SUCCESS
+/* =========================
+SCAN SUCCESS
+========================= */
 
 function onScanSuccess(decodedText){
 
@@ -448,7 +575,9 @@ function onScanSuccess(decodedText){
 
 }
 
-// START CAMERA
+/* =========================
+START CAMERA
+========================= */
 
 async function startScanner(){
 
@@ -481,7 +610,9 @@ async function startScanner(){
 
 }
 
-// SWITCH CAMERA
+/* =========================
+SWITCH CAMERA
+========================= */
 
 async function switchCamera(){
 
@@ -506,7 +637,9 @@ async function switchCamera(){
 
 }
 
-// RESET
+/* =========================
+RESET
+========================= */
 
 function resetScanner(){
 
@@ -518,7 +651,9 @@ function resetScanner(){
 
 }
 
-// DASHBOARD
+/* =========================
+LOAD DASHBOARD
+========================= */
 
 async function loadDashboard(){
 
@@ -559,6 +694,19 @@ async function loadDashboard(){
     document.getElementById("bkPending")
       .innerHTML = data.bkPending;
 
+    // SORT AREA + BRANCH
+    data.areas.sort((a,b)=>{
+
+      if(a.area < b.area) return -1;
+      if(a.area > b.area) return 1;
+
+      if(a.branch < b.branch) return -1;
+      if(a.branch > b.branch) return 1;
+
+      return 0;
+
+    });
+
     let html = "";
 
     data.areas.forEach(a => {
@@ -575,7 +723,7 @@ async function loadDashboard(){
 
         <td>${a.scanned}</td>
 
-        <td>${a.pending}</td>
+        <td class="pending">${a.pending}</td>
 
       </tr>
 
