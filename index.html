@@ -48,6 +48,7 @@ background:#1e293b;
 color:white;
 font-size:15px;
 font-weight:bold;
+cursor:pointer;
 }
 
 .nav button.active{
@@ -58,23 +59,30 @@ background:#2563eb;
 display:none;
 padding:12px;
 height:calc(100vh - 110px);
-overflow:hidden;
+overflow:auto;
 }
 
 .page.active{
 display:block;
 }
 
-#reader{
+/* =========================
+SCANNER
+========================= */
+
+#reader,
+#readerEstafet{
 width:100%;
 max-width:500px;
 margin:auto;
 border-radius:20px;
 overflow:hidden;
 border:4px solid #22c55e;
+background:black;
 }
 
-#result{
+#result,
+#resultEstafet{
 margin-top:15px;
 padding:16px;
 border-radius:15px;
@@ -88,6 +96,9 @@ font-weight:bold;
 display:flex;
 gap:10px;
 margin-top:15px;
+max-width:500px;
+margin-left:auto;
+margin-right:auto;
 }
 
 .controls button{
@@ -97,6 +108,7 @@ border:none;
 border-radius:15px;
 font-size:15px;
 font-weight:bold;
+cursor:pointer;
 }
 
 .btn-camera{
@@ -107,6 +119,23 @@ color:white;
 .btn-reset{
 background:#374151;
 color:white;
+}
+
+/* =========================
+DASHBOARD
+========================= */
+
+.filter-container{
+margin-bottom:12px;
+}
+
+.filter-container select{
+padding:12px;
+border:none;
+border-radius:12px;
+background:#1e293b;
+color:white;
+font-weight:bold;
 }
 
 .dashboard-grid{
@@ -171,7 +200,6 @@ background:#1e293b;
 padding:16px;
 border-radius:18px;
 overflow:auto;
-max-height:350px;
 }
 
 .table-title{
@@ -189,6 +217,8 @@ border-collapse:collapse;
 background:#2563eb;
 padding:10px;
 font-size:13px;
+position:sticky;
+top:0;
 }
 
 .area-table td{
@@ -197,34 +227,6 @@ padding:10px;
 text-align:center;
 border-bottom:1px solid #334155;
 font-size:13px;
-}
-
-.filter-container{
-display:flex;
-gap:10px;
-margin-bottom:12px;
-}
-
-.filter-container select{
-padding:12px;
-border:none;
-border-radius:12px;
-background:#1e293b;
-color:white;
-font-weight:bold;
-}
-
-@media(max-width:700px){
-
-.dashboard-grid{
-grid-template-columns:
-repeat(2,1fr);
-}
-
-.card-value{
-font-size:28px;
-}
-
 }
 
 </style>
@@ -254,7 +256,9 @@ DASHBOARD
 
 </div>
 
-<!-- SCAN -->
+<!-- =========================
+SCAN
+========================= -->
 
 <div id="scan"
 class="page active">
@@ -281,7 +285,9 @@ Reset
 
 </div>
 
-<!-- ESTAFET -->
+<!-- =========================
+ESTAFET
+========================= -->
 
 <div id="estafet"
 class="page">
@@ -295,18 +301,22 @@ Loading Camera...
 <div class="controls">
 
 <button class="btn-camera"
-onclick="switchCamera()">
+onclick="switchCameraEstafet()">
 Switch Camera
 </button>
 
 <button class="btn-reset"
-onclick="resetScanner()">
+onclick="resetScannerEstafet()">
 Reset
 </button>
 
 </div>
 
-<!-- DASHBOARD -->
+</div>
+
+<!-- =========================
+DASHBOARD
+========================= -->
 
 <div id="dashboard"
 class="page">
@@ -390,12 +400,12 @@ id="bkPending">0</div>
 
 </div>
 
-<!-- AREA -->
+<!-- SUMMARY AREA -->
 
 <div class="table-card">
 
 <div class="table-title">
-SUMMARY PER AREA
+SUMMARY AREA
 </div>
 
 <table class="area-table">
@@ -422,12 +432,12 @@ SUMMARY PER AREA
 
 </div>
 
-<!-- WARNA -->
+<!-- SUMMARY WARNA -->
 
 <div class="table-card">
 
 <div class="table-title">
-SUMMARY PER KODE WARNA
+SUMMARY KODE WARNA
 </div>
 
 <table class="area-table">
@@ -467,13 +477,16 @@ let scannerEstafet;
 let currentCamera =
 "environment";
 
+let currentCameraEstafet =
+"environment";
+
 let lastScan = "";
 
-// =====================================
+// =========================
 // NAVIGATION
-// =====================================
+// =========================
 
-function showPage(page,btn){
+async function showPage(page,btn){
 
 document
 .querySelectorAll(".page")
@@ -493,15 +506,49 @@ b.classList.remove("active");
 
 btn.classList.add("active");
 
+// STOP SCAN
+
+try{
+
+if(scanner){
+await scanner.stop();
+}
+
+}catch(e){}
+
+try{
+
+if(scannerEstafet){
+await scannerEstafet.stop();
+}
+
+}catch(e){}
+
+// START PAGE
+
+if(page == "scan"){
+
+startScanner();
+
+}
+
+if(page == "estafet"){
+
+startScannerEstafet();
+
+}
+
 if(page == "dashboard"){
+
 loadDashboard();
-}
 
 }
 
-// =====================================
+}
+
+// =========================
 // STATUS
-// =====================================
+// =========================
 
 function updateStatus(
 id,
@@ -548,37 +595,9 @@ result.style.background =
 
 }
 
-// =====================================
-// NORMAL SCAN
-// =====================================
-
-function onScanSuccess(decodedText){
-
-processScan(
-decodedText,
-"scan",
-"result"
-);
-
-}
-
-// =====================================
-// ESTAFET
-// =====================================
-
-function onScanEstafet(decodedText){
-
-processScan(
-decodedText,
-"estafet",
-"resultEstafet"
-);
-
-}
-
-// =====================================
+// =========================
 // PROCESS SCAN
-// =====================================
+// =========================
 
 function processScan(
 decodedText,
@@ -630,13 +649,46 @@ setTimeout(() => {
 lastScan = "";
 },3000);
 
+})
+
+.catch(err => {
+
+updateStatus(
+resultId,
+"ERROR : " + err
+);
+
 });
 
 }
 
-// =====================================
-// START CAMERA
-// =====================================
+// =========================
+// SCAN SUCCESS
+// =========================
+
+function onScanSuccess(decodedText){
+
+processScan(
+decodedText,
+"scan",
+"result"
+);
+
+}
+
+function onScanEstafet(decodedText){
+
+processScan(
+decodedText,
+"estafet",
+"resultEstafet"
+);
+
+}
+
+// =========================
+// START SCANNER
+// =========================
 
 async function startScanner(){
 
@@ -663,11 +715,12 @@ onScanSuccess
 
 );
 
-}
+updateStatus(
+"result",
+"📷 Camera Ready"
+);
 
-// =====================================
-// START ESTAFET
-// =====================================
+}
 
 async function startScannerEstafet(){
 
@@ -679,7 +732,7 @@ new Html5Qrcode(
 await scannerEstafet.start(
 
 {
-facingMode:currentCamera
+facingMode:currentCameraEstafet
 },
 
 {
@@ -696,13 +749,20 @@ onScanEstafet
 
 );
 
+updateStatus(
+"resultEstafet",
+"📷 Camera Ready"
+);
+
 }
 
-// =====================================
+// =========================
 // SWITCH CAMERA
-// =====================================
+// =========================
 
 async function switchCamera(){
+
+try{
 
 await scanner.stop();
 
@@ -713,11 +773,44 @@ currentCamera == "environment"
 
 startScanner();
 
+}catch(err){
+
+updateStatus(
+"result",
+"ERROR : " + err
+);
+
 }
 
-// =====================================
+}
+
+async function switchCameraEstafet(){
+
+try{
+
+await scannerEstafet.stop();
+
+currentCameraEstafet =
+currentCameraEstafet == "environment"
+? "user"
+: "environment";
+
+startScannerEstafet();
+
+}catch(err){
+
+updateStatus(
+"resultEstafet",
+"ERROR : " + err
+);
+
+}
+
+}
+
+// =========================
 // RESET
-// =====================================
+// =========================
 
 function resetScanner(){
 
@@ -730,9 +823,20 @@ updateStatus(
 
 }
 
-// =====================================
+function resetScannerEstafet(){
+
+lastScan = "";
+
+updateStatus(
+"resultEstafet",
+"Scanner Reset"
+);
+
+}
+
+// =========================
 // LOAD DASHBOARD
-// =====================================
+// =========================
 
 async function loadDashboard(){
 
@@ -754,6 +858,8 @@ menu
 
 const data =
 await res.json();
+
+// CARD
 
 document.getElementById(
 "totalQty"
@@ -800,9 +906,7 @@ document.getElementById(
 ).innerHTML =
 data.bkPending;
 
-// =====================================
 // AREA
-// =====================================
 
 data.areas.sort((a,b)=>{
 
@@ -846,9 +950,7 @@ document
 .getElementById("areaTable")
 .innerHTML = html;
 
-// =====================================
 // WARNA
-// =====================================
 
 data.warnaSummary.sort((a,b)=>{
 
@@ -895,8 +997,11 @@ warnaHtml;
 
 }
 
+// =========================
+// INIT
+// =========================
+
 startScanner();
-startScannerEstafet();
 
 loadDashboard();
 
