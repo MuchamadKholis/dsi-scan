@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0">
 
 <title>DSI Scanner</title>
 
@@ -15,249 +15,215 @@
 <style>
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-  font-family:Arial;
-  background:#020617;
-  color:white;
+font-family:Arial;
+background:#020617;
+color:white;
+height:100vh;
+overflow:hidden;
 }
 
 .header{
-  background:#0f172a;
-  padding:22px;
-  text-align:center;
-  font-size:28px;
-  font-weight:bold;
+background:#0f172a;
+padding:18px;
+text-align:center;
+font-size:26px;
+font-weight:bold;
 }
 
 .nav{
-  display:flex;
+display:flex;
 }
 
 .nav button{
-  flex:1;
-  padding:16px;
-  border:none;
-  background:#1e293b;
-  color:white;
-  font-size:16px;
-  font-weight:bold;
+flex:1;
+padding:14px;
+border:none;
+background:#1e293b;
+color:white;
+font-size:15px;
+font-weight:bold;
 }
 
 .nav button.active{
-  background:#2563eb;
+background:#2563eb;
 }
 
 .page{
-  display:none;
-  padding:16px;
+display:none;
+padding:12px;
+height:calc(100vh - 110px);
+overflow:hidden;
 }
 
 .page.active{
-  display:block;
+display:block;
 }
 
-/* =========================
-SCANNER
-========================= */
-
 #reader{
-  width:100%;
-  border-radius:20px;
-  overflow:hidden;
-  border:4px solid #22c55e;
-  background:black;
+width:100%;
+max-width:500px;
+margin:auto;
+border-radius:20px;
+overflow:hidden;
+border:4px solid #22c55e;
 }
 
 #result{
-  margin-top:15px;
-  padding:16px;
-  border-radius:15px;
-  background:#1e293b;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
+margin-top:15px;
+padding:16px;
+border-radius:15px;
+background:#1e293b;
+text-align:center;
+font-size:22px;
+font-weight:bold;
 }
 
 .controls{
-  display:flex;
-  gap:10px;
-  margin-top:15px;
+display:flex;
+gap:10px;
+margin-top:15px;
 }
 
 .controls button{
-  flex:1;
-  padding:14px;
-  border:none;
-  border-radius:15px;
-  font-size:15px;
-  font-weight:bold;
+flex:1;
+padding:14px;
+border:none;
+border-radius:15px;
+font-size:15px;
+font-weight:bold;
 }
 
 .btn-camera{
-  background:#2563eb;
-  color:white;
+background:#2563eb;
+color:white;
 }
 
 .btn-reset{
-  background:#374151;
-  color:white;
+background:#374151;
+color:white;
 }
-
-/* =========================
-CARD GRID
-========================= */
 
 .dashboard-grid{
 
-  display:grid;
+display:grid;
 
-  grid-template-columns:
-    repeat(3,1fr);
+grid-template-columns:
+repeat(3,1fr);
 
-  gap:12px;
+gap:10px;
 
 }
 
 .card{
 
-  background:#1e293b;
+background:#1e293b;
 
-  padding:16px;
+padding:14px;
 
-  border-radius:20px;
+border-radius:18px;
 
-  min-height:110px;
+min-height:85px;
 
-  display:flex;
+display:flex;
 
-  flex-direction:column;
+flex-direction:column;
 
-  justify-content:center;
+justify-content:center;
 
 }
 
 .card-title{
-
-  color:#94a3b8;
-
-  font-size:13px;
-
-  margin-bottom:10px;
-
+font-size:12px;
+color:#94a3b8;
+margin-bottom:8px;
 }
 
 .card-value{
-
-  font-size:42px;
-
-  font-weight:bold;
-
-  line-height:1;
-
+font-size:34px;
+font-weight:bold;
 }
 
 .blue{
-  color:#60a5fa;
+color:#60a5fa;
 }
 
 .green{
-  color:#4ade80;
-}
-
-.red{
-  color:#f87171;
+color:#4ade80;
 }
 
 .yellow{
-  color:#facc15;
+color:#facc15;
 }
 
-/* =========================
-TABLE
-========================= */
+.red{
+color:#f87171;
+}
 
 .table-card{
-
-  margin-top:18px;
-
-  background:#1e293b;
-
-  padding:18px;
-
-  border-radius:20px;
-
-  overflow:auto;
-
+margin-top:12px;
+background:#1e293b;
+padding:16px;
+border-radius:18px;
+overflow:auto;
+max-height:350px;
 }
 
 .table-title{
-
-  font-size:22px;
-
-  font-weight:bold;
-
-  margin-bottom:15px;
-
+font-size:20px;
+font-weight:bold;
+margin-bottom:10px;
 }
 
 .area-table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
+width:100%;
+border-collapse:collapse;
 }
 
 .area-table th{
-
-  background:#2563eb;
-
-  padding:12px;
-
-  font-size:14px;
-
+background:#2563eb;
+padding:10px;
+font-size:13px;
 }
 
 .area-table td{
-
-  background:#0f172a;
-
-  padding:12px;
-
-  text-align:center;
-
-  border-bottom:1px solid #334155;
-
-  font-size:14px;
-
+background:#0f172a;
+padding:10px;
+text-align:center;
+border-bottom:1px solid #334155;
+font-size:13px;
 }
 
-.pending{
-
-  color:#f87171;
-
-  font-weight:bold;
-
+.filter-container{
+display:flex;
+gap:10px;
+margin-bottom:12px;
 }
 
-/* =========================
-MOBILE
-========================= */
+.filter-container select{
+padding:12px;
+border:none;
+border-radius:12px;
+background:#1e293b;
+color:white;
+font-weight:bold;
+}
 
 @media(max-width:700px){
 
-  .card-value{
-    font-size:32px;
-  }
+.dashboard-grid{
+grid-template-columns:
+repeat(2,1fr);
+}
 
-  .card{
-    min-height:95px;
-  }
+.card-value{
+font-size:28px;
+}
 
 }
 
@@ -274,8 +240,12 @@ DSI SCANNER
 <div class="nav">
 
 <button class="active"
-        onclick="showPage('scan',this)">
+onclick="showPage('scan',this)">
 SCAN
+</button>
+
+<button onclick="showPage('estafet',this)">
+ESTAFET
 </button>
 
 <button onclick="showPage('dashboard',this)">
@@ -284,12 +254,10 @@ DASHBOARD
 
 </div>
 
-<!-- =========================
-SCAN PAGE
-========================= -->
+<!-- SCAN -->
 
 <div id="scan"
-     class="page active">
+class="page active">
 
 <div id="reader"></div>
 
@@ -300,12 +268,12 @@ Loading Camera...
 <div class="controls">
 
 <button class="btn-camera"
-        onclick="switchCamera()">
+onclick="switchCamera()">
 Switch Camera
 </button>
 
 <button class="btn-reset"
-        onclick="resetScanner()">
+onclick="resetScanner()">
 Reset
 </button>
 
@@ -313,72 +281,104 @@ Reset
 
 </div>
 
-<!-- =========================
-DASHBOARD PAGE
-========================= -->
+<!-- ESTAFET -->
+
+<div id="estafet"
+class="page">
+
+<div id="readerEstafet"></div>
+
+<div id="resultEstafet">
+Loading Camera...
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
 
 <div id="dashboard"
-     class="page">
+class="page">
+
+<div class="filter-container">
+
+<select id="menuFilter"
+onchange="loadDashboard()">
+
+<option value="ALL">
+ALL
+</option>
+
+<option value="Lunch">
+Lunch
+</option>
+
+<option value="Dinner">
+Dinner
+</option>
+
+</select>
+
+</div>
 
 <div class="dashboard-grid">
 
 <div class="card">
 <div class="card-title">QTY BOX</div>
 <div class="card-value blue"
-     id="totalQty">0</div>
+id="totalQty">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">BOX HG</div>
 <div class="card-value green"
-     id="hgQty">0</div>
+id="hgQty">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">BOX BK</div>
 <div class="card-value yellow"
-     id="bkQty">0</div>
+id="bkQty">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">QTY SCANNED</div>
 <div class="card-value green"
-     id="scannedQty">0</div>
+id="scannedQty">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">HG SCANNED</div>
 <div class="card-value green"
-     id="hgScanned">0</div>
+id="hgScanned">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">BK SCANNED</div>
-<div class="card-value green"
-     id="bkScanned">0</div>
+<div class="card-value yellow"
+id="bkScanned">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">QTY PENDING</div>
 <div class="card-value red"
-     id="pendingQty">0</div>
+id="pendingQty">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">HG PENDING</div>
 <div class="card-value red"
-     id="hgPending">0</div>
+id="hgPending">0</div>
 </div>
 
 <div class="card">
 <div class="card-title">BK PENDING</div>
 <div class="card-value red"
-     id="bkPending">0</div>
+id="bkPending">0</div>
 </div>
 
 </div>
 
-<!-- TABLE -->
+<!-- AREA -->
 
 <div class="table-card">
 
@@ -397,6 +397,7 @@ SUMMARY PER AREA
 <th>QTY</th>
 <th>SCANNED</th>
 <th>PENDING</th>
+<th>%</th>
 
 </tr>
 
@@ -409,351 +410,488 @@ SUMMARY PER AREA
 
 </div>
 
+<!-- WARNA -->
+
+<div class="table-card">
+
+<div class="table-title">
+SUMMARY PER KODE WARNA
+</div>
+
+<table class="area-table">
+
+<thead>
+
+<tr>
+
+<th>AREA</th>
+<th>KODE WARNA</th>
+<th>QTY</th>
+<th>SCANNED</th>
+<th>PENDING</th>
+<th>%</th>
+
+</tr>
+
+</thead>
+
+<tbody id="warnaTable">
+</tbody>
+
+</table>
+
+</div>
+
 </div>
 
 <script>
 
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycbwetKORKAOoPlKtZFoW_ovR0wwN5Cc5Ivb6GI2iKoDnU_S9eN-HT2dNtBZUtAS3gWtg/exec";
+"https://script.google.com/macros/s/AKfycbzIuGvKcukojK73q8Uk1nnejy0VKIcIrNkjT50F21WmC2wa9MI0SGgxi_x9tENtYTLQ/exec";
 
 let scanner;
+let scannerEstafet;
 
-let currentCamera = "environment";
+let currentCamera =
+"environment";
 
 let lastScan = "";
 
-/* =========================
-NAVIGATION
-========================= */
+// =====================================
+// NAVIGATION
+// =====================================
 
 function showPage(page,btn){
 
-  document
-    .querySelectorAll(".page")
-    .forEach(p => {
-      p.classList.remove("active");
-    });
+document
+.querySelectorAll(".page")
+.forEach(p => {
+p.classList.remove("active");
+});
 
-  document
-    .getElementById(page)
-    .classList.add("active");
+document
+.getElementById(page)
+.classList.add("active");
 
-  document
-    .querySelectorAll(".nav button")
-    .forEach(b => {
-      b.classList.remove("active");
-    });
+document
+.querySelectorAll(".nav button")
+.forEach(b => {
+b.classList.remove("active");
+});
 
-  btn.classList.add("active");
+btn.classList.add("active");
 
-  if(page == "dashboard"){
-    loadDashboard();
-  }
+if(page == "dashboard"){
+loadDashboard();
+}
 
 }
 
-/* =========================
-BEEP
-========================= */
+// =====================================
+// STATUS
+// =====================================
 
-function beep(){
+function updateStatus(
+id,
+text
+){
 
-  const audio =
-    new Audio(
-      "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
-    );
+const result =
+document.getElementById(id);
 
-  audio.play();
+result.innerHTML = text;
 
-}
+result.style.color = "white";
+result.style.background = "#1e293b";
 
-/* =========================
-VIBRATE
-========================= */
+if(
+text.includes("BERHASIL")
+){
 
-function vibrate(){
+result.style.color =
+"#4ade80";
 
-  if(navigator.vibrate){
-    navigator.vibrate(200);
-  }
-
-}
-
-/* =========================
-STATUS
-========================= */
-
-function updateStatus(text){
-
-  const result =
-    document.getElementById("result");
-
-  result.innerHTML = text;
-
-  result.style.color = "white";
-  result.style.background = "#1e293b";
-
-  // SUCCESS
-  if(text.includes("SCAN BERHASIL")){
-
-    result.style.color = "#4ade80";
-    result.style.background = "#052e16";
-
-  }
-
-  // ERROR
-  else if(
-
-    text.includes("BOX TIDAK DITEMUKAN") ||
-
-    text.includes("BOX SUDAH DISCAN") ||
-
-    text.includes("ERROR")
-
-  ){
-
-    result.style.color = "#f87171";
-    result.style.background = "#450a0a";
-
-  }
+result.style.background =
+"#052e16";
 
 }
 
-/* =========================
-SCAN SUCCESS
-========================= */
+else if(
+
+text.includes("TIDAK") ||
+
+text.includes("SUDAH") ||
+
+text.includes("ERROR")
+
+){
+
+result.style.color =
+"#f87171";
+
+result.style.background =
+"#450a0a";
+
+}
+
+}
+
+// =====================================
+// NORMAL SCAN
+// =====================================
 
 function onScanSuccess(decodedText){
 
-  if(decodedText == lastScan){
-    return;
-  }
-
-  lastScan = decodedText;
-
-  beep();
-
-  vibrate();
-
-  updateStatus(
-    "Scanning : " + decodedText
-  );
-
-  fetch(WEB_APP_URL, {
-
-    method:"POST",
-
-    mode:"cors",
-
-    headers:{
-      "Content-Type":"text/plain"
-    },
-
-    body:JSON.stringify({
-      boxId:decodedText
-    })
-
-  })
-
-  .then(res => res.text())
-
-  .then(data => {
-
-    updateStatus(data);
-
-    loadDashboard();
-
-    setTimeout(() => {
-
-      lastScan = "";
-
-    },3000);
-
-  })
-
-  .catch(err => {
-
-    updateStatus(err);
-
-  });
+processScan(
+decodedText,
+"scan",
+"result"
+);
 
 }
 
-/* =========================
-START CAMERA
-========================= */
+// =====================================
+// ESTAFET
+// =====================================
+
+function onScanEstafet(decodedText){
+
+processScan(
+decodedText,
+"estafet",
+"resultEstafet"
+);
+
+}
+
+// =====================================
+// PROCESS SCAN
+// =====================================
+
+function processScan(
+decodedText,
+type,
+resultId
+){
+
+if(decodedText == lastScan){
+return;
+}
+
+lastScan = decodedText;
+
+updateStatus(
+resultId,
+"Scanning : " + decodedText
+);
+
+fetch(WEB_APP_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"text/plain"
+},
+
+body:JSON.stringify({
+
+boxId:decodedText,
+
+type:type
+
+})
+
+})
+
+.then(res => res.text())
+
+.then(data => {
+
+updateStatus(
+resultId,
+data
+);
+
+loadDashboard();
+
+setTimeout(() => {
+lastScan = "";
+},3000);
+
+});
+
+}
+
+// =====================================
+// START CAMERA
+// =====================================
 
 async function startScanner(){
 
-  scanner =
-    new Html5Qrcode("reader");
+scanner =
+new Html5Qrcode("reader");
 
-  await scanner.start(
+await scanner.start(
 
-    {
-      facingMode:currentCamera
-    },
+{
+facingMode:currentCamera
+},
 
-    {
-      fps:10,
+{
+fps:10,
 
-      qrbox:{
-        width:250,
-        height:250
-      }
+qrbox:{
+width:250,
+height:250
+}
 
-    },
+},
 
-    onScanSuccess
+onScanSuccess
 
-  );
-
-  updateStatus(
-    "📷 Camera Ready"
-  );
+);
 
 }
 
-/* =========================
-SWITCH CAMERA
-========================= */
+// =====================================
+// START ESTAFET
+// =====================================
+
+async function startScannerEstafet(){
+
+scannerEstafet =
+new Html5Qrcode(
+"readerEstafet"
+);
+
+await scannerEstafet.start(
+
+{
+facingMode:currentCamera
+},
+
+{
+fps:10,
+
+qrbox:{
+width:250,
+height:250
+}
+
+},
+
+onScanEstafet
+
+);
+
+}
+
+// =====================================
+// SWITCH CAMERA
+// =====================================
 
 async function switchCamera(){
 
-  try{
+await scanner.stop();
 
-    await scanner.stop();
+currentCamera =
+currentCamera == "environment"
+? "user"
+: "environment";
 
-    currentCamera =
-      currentCamera == "environment"
-      ? "user"
-      : "environment";
-
-    startScanner();
-
-  }
-
-  catch(err){
-
-    updateStatus(err);
-
-  }
+startScanner();
 
 }
 
-/* =========================
-RESET
-========================= */
+// =====================================
+// RESET
+// =====================================
 
 function resetScanner(){
 
-  lastScan = "";
+lastScan = "";
 
-  updateStatus(
-    "Scanner Reset"
-  );
+updateStatus(
+"result",
+"Scanner Reset"
+);
 
 }
 
-/* =========================
-LOAD DASHBOARD
-========================= */
+// =====================================
+// LOAD DASHBOARD
+// =====================================
 
 async function loadDashboard(){
 
-  try{
+const menu =
+document.getElementById(
+"menuFilter"
+).value;
 
-    const res =
-      await fetch(
-        WEB_APP_URL + "?dashboard=1"
-      );
+const res =
+await fetch(
 
-    const data =
-      await res.json();
+WEB_APP_URL +
 
-    document.getElementById("totalQty")
-      .innerHTML = data.totalQty;
+"?dashboard=1&menu=" +
 
-    document.getElementById("hgQty")
-      .innerHTML = data.hgQty;
+menu
 
-    document.getElementById("bkQty")
-      .innerHTML = data.bkQty;
+);
 
-    document.getElementById("scannedQty")
-      .innerHTML = data.scannedQty;
+const data =
+await res.json();
 
-    document.getElementById("hgScanned")
-      .innerHTML = data.hgScanned;
+document.getElementById(
+"totalQty"
+).innerHTML =
+data.totalQty;
 
-    document.getElementById("bkScanned")
-      .innerHTML = data.bkScanned;
+document.getElementById(
+"hgQty"
+).innerHTML =
+data.hgQty;
 
-    document.getElementById("pendingQty")
-      .innerHTML = data.pendingQty;
+document.getElementById(
+"bkQty"
+).innerHTML =
+data.bkQty;
 
-    document.getElementById("hgPending")
-      .innerHTML = data.hgPending;
+document.getElementById(
+"scannedQty"
+).innerHTML =
+data.scannedQty;
 
-    document.getElementById("bkPending")
-      .innerHTML = data.bkPending;
+document.getElementById(
+"hgScanned"
+).innerHTML =
+data.hgScanned;
 
-    // SORT AREA + BRANCH
-    data.areas.sort((a,b)=>{
+document.getElementById(
+"bkScanned"
+).innerHTML =
+data.bkScanned;
 
-      if(a.area < b.area) return -1;
-      if(a.area > b.area) return 1;
+document.getElementById(
+"pendingQty"
+).innerHTML =
+data.pendingQty;
 
-      if(a.branch < b.branch) return -1;
-      if(a.branch > b.branch) return 1;
+document.getElementById(
+"hgPending"
+).innerHTML =
+data.hgPending;
 
-      return 0;
+document.getElementById(
+"bkPending"
+).innerHTML =
+data.bkPending;
 
-    });
+// =====================================
+// AREA
+// =====================================
 
-    let html = "";
+data.areas.sort((a,b)=>{
 
-    data.areas.forEach(a => {
+if(a.area < b.area) return -1;
+if(a.area > b.area) return 1;
 
-      html += `
+if(a.branch < b.branch) return -1;
+if(a.branch > b.branch) return 1;
 
-      <tr>
+return 0;
 
-        <td>${a.area}</td>
+});
 
-        <td>${a.branch}</td>
+let html = "";
 
-        <td>${a.qty}</td>
+data.areas.forEach(a => {
 
-        <td>${a.scanned}</td>
+html += `
 
-        <td class="pending">${a.pending}</td>
+<tr>
 
-      </tr>
+<td>${a.area}</td>
 
-      `;
+<td>${a.branch}</td>
 
-    });
+<td>${a.qty}</td>
 
-    document
-      .getElementById("areaTable")
-      .innerHTML = html;
+<td>${a.scanned}</td>
 
-  }
+<td>${a.pending}</td>
 
-  catch(err){
+<td>${a.percent}%</td>
 
-    console.log(err);
+</tr>
 
-  }
+`;
+
+});
+
+document
+.getElementById("areaTable")
+.innerHTML = html;
+
+// =====================================
+// WARNA
+// =====================================
+
+data.warnaSummary.sort((a,b)=>{
+
+if(a.area < b.area) return -1;
+if(a.area > b.area) return 1;
+
+if(a.kodeWarna < b.kodeWarna) return -1;
+if(a.kodeWarna > b.kodeWarna) return 1;
+
+return 0;
+
+});
+
+let warnaHtml = "";
+
+data.warnaSummary.forEach(w => {
+
+warnaHtml += `
+
+<tr>
+
+<td>${w.area}</td>
+
+<td>${w.kodeWarna}</td>
+
+<td>${w.qty}</td>
+
+<td>${w.scanned}</td>
+
+<td>${w.pending}</td>
+
+<td>${w.percent}%</td>
+
+</tr>
+
+`;
+
+});
+
+document
+.getElementById("warnaTable")
+.innerHTML =
+warnaHtml;
 
 }
 
 startScanner();
+startScannerEstafet();
 
 loadDashboard();
 
-setInterval(loadDashboard,5000);
+setInterval(
+loadDashboard,
+5000
+);
 
 </script>
 
