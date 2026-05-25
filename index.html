@@ -24,8 +24,8 @@ body{
 font-family:Arial;
 background:#020617;
 color:white;
-height:100vh;
-overflow:hidden;
+min-height:100vh;
+overflow:auto;
 }
 
 .header{
@@ -58,7 +58,7 @@ background:#2563eb;
 .page{
 display:none;
 padding:12px;
-height:calc(100vh - 110px);
+min-height:calc(100vh - 110px);
 overflow:auto;
 }
 
@@ -471,20 +471,17 @@ SUMMARY KODE WARNA
 const WEB_APP_URL =
 "https://script.google.com/macros/s/AKfycbzIuGvKcukojK73q8Uk1nnejy0VKIcIrNkjT50F21WmC2wa9MI0SGgxi_x9tENtYTLQ/exec";
 
-let scanner;
-let scannerEstafet;
+let scanner = null;
+let scannerEstafet = null;
 
-let currentCamera =
-"environment";
-
-let currentCameraEstafet =
-"environment";
+let currentCamera = "environment";
+let currentCameraEstafet = "environment";
 
 let lastScan = "";
 
-// =========================
+// =====================================
 // NAVIGATION
-// =========================
+// =====================================
 
 async function showPage(page,btn){
 
@@ -506,25 +503,7 @@ b.classList.remove("active");
 
 btn.classList.add("active");
 
-// STOP SCAN
-
-try{
-
-if(scanner){
-await scanner.stop();
-}
-
-}catch(e){}
-
-try{
-
-if(scannerEstafet){
-await scannerEstafet.stop();
-}
-
-}catch(e){}
-
-// START PAGE
+await stopAllScanner();
 
 if(page == "scan"){
 
@@ -532,13 +511,13 @@ startScanner();
 
 }
 
-if(page == "estafet"){
+else if(page == "estafet"){
 
 startScannerEstafet();
 
 }
 
-if(page == "dashboard"){
+else if(page == "dashboard"){
 
 loadDashboard();
 
@@ -546,14 +525,45 @@ loadDashboard();
 
 }
 
-// =========================
-// STATUS
-// =========================
+// =====================================
+// STOP CAMERA
+// =====================================
 
-function updateStatus(
-id,
-text
-){
+async function stopAllScanner(){
+
+try{
+
+if(scanner){
+
+await scanner.stop();
+await scanner.clear();
+
+scanner = null;
+
+}
+
+}catch(e){}
+
+try{
+
+if(scannerEstafet){
+
+await scannerEstafet.stop();
+await scannerEstafet.clear();
+
+scannerEstafet = null;
+
+}
+
+}catch(e){}
+
+}
+
+// =====================================
+// STATUS
+// =====================================
+
+function updateStatus(id,text){
 
 const result =
 document.getElementById(id);
@@ -563,15 +573,10 @@ result.innerHTML = text;
 result.style.color = "white";
 result.style.background = "#1e293b";
 
-if(
-text.includes("BERHASIL")
-){
+if(text.includes("BERHASIL")){
 
-result.style.color =
-"#4ade80";
-
-result.style.background =
-"#052e16";
+result.style.color = "#4ade80";
+result.style.background = "#052e16";
 
 }
 
@@ -585,19 +590,16 @@ text.includes("ERROR")
 
 ){
 
-result.style.color =
-"#f87171";
-
-result.style.background =
-"#450a0a";
+result.style.color = "#f87171";
+result.style.background = "#450a0a";
 
 }
 
 }
 
-// =========================
+// =====================================
 // PROCESS SCAN
-// =========================
+// =====================================
 
 function processScan(
 decodedText,
@@ -646,7 +648,9 @@ data
 loadDashboard();
 
 setTimeout(() => {
+
 lastScan = "";
+
 },3000);
 
 })
@@ -662,35 +666,13 @@ resultId,
 
 }
 
-// =========================
-// SCAN SUCCESS
-// =========================
-
-function onScanSuccess(decodedText){
-
-processScan(
-decodedText,
-"scan",
-"result"
-);
-
-}
-
-function onScanEstafet(decodedText){
-
-processScan(
-decodedText,
-"estafet",
-"resultEstafet"
-);
-
-}
-
-// =========================
+// =====================================
 // START SCANNER
-// =========================
+// =====================================
 
 async function startScanner(){
+
+try{
 
 scanner =
 new Html5Qrcode("reader");
@@ -711,7 +693,15 @@ height:250
 
 },
 
-onScanSuccess
+decodedText => {
+
+processScan(
+decodedText,
+"scan",
+"result"
+);
+
+}
 
 );
 
@@ -722,12 +712,23 @@ updateStatus(
 
 }
 
+catch(err){
+
+updateStatus(
+"result",
+"ERROR CAMERA"
+);
+
+}
+
+}
+
 async function startScannerEstafet(){
 
+try{
+
 scannerEstafet =
-new Html5Qrcode(
-"readerEstafet"
-);
+new Html5Qrcode("readerEstafet");
 
 await scannerEstafet.start(
 
@@ -745,7 +746,15 @@ height:250
 
 },
 
-onScanEstafet
+decodedText => {
+
+processScan(
+decodedText,
+"estafet",
+"resultEstafet"
+);
+
+}
 
 );
 
@@ -756,89 +765,84 @@ updateStatus(
 
 }
 
-// =========================
-// SWITCH CAMERA
-// =========================
-
-async function switchCamera(){
-
-try{
-
-await scanner.stop();
-
-currentCamera =
-currentCamera == "environment"
-? "user"
-: "environment";
-
-startScanner();
-
-}catch(err){
+catch(err){
 
 updateStatus(
-"result",
-"ERROR : " + err
+"resultEstafet",
+"ERROR CAMERA"
 );
 
 }
+
+}
+
+// =====================================
+// SWITCH CAMERA
+// =====================================
+
+async function switchCamera(){
+
+currentCamera =
+
+currentCamera == "environment"
+
+? "user"
+
+: "environment";
+
+await stopAllScanner();
+
+startScanner();
 
 }
 
 async function switchCameraEstafet(){
 
-try{
-
-await scannerEstafet.stop();
-
 currentCameraEstafet =
+
 currentCameraEstafet == "environment"
+
 ? "user"
+
 : "environment";
+
+await stopAllScanner();
 
 startScannerEstafet();
 
-}catch(err){
-
-updateStatus(
-"resultEstafet",
-"ERROR : " + err
-);
-
 }
 
-}
-
-// =========================
+// =====================================
 // RESET
-// =========================
+// =====================================
 
-function resetScanner(){
-
-lastScan = "";
-
-updateStatus(
-"result",
-"Scanner Reset"
-);
-
-}
-
-function resetScannerEstafet(){
+async function resetScanner(){
 
 lastScan = "";
 
-updateStatus(
-"resultEstafet",
-"Scanner Reset"
-);
+await stopAllScanner();
+
+startScanner();
 
 }
 
-// =========================
+async function resetScannerEstafet(){
+
+lastScan = "";
+
+await stopAllScanner();
+
+startScannerEstafet();
+
+}
+
+// =====================================
 // LOAD DASHBOARD
-// =========================
+// =====================================
 
 async function loadDashboard(){
+
+try{
 
 const menu =
 document.getElementById(
@@ -859,66 +863,32 @@ menu
 const data =
 await res.json();
 
-// CARD
+document.getElementById("totalQty")
+.innerHTML = data.totalQty;
 
-document.getElementById(
-"totalQty"
-).innerHTML =
-data.totalQty;
+document.getElementById("hgQty")
+.innerHTML = data.hgQty;
 
-document.getElementById(
-"hgQty"
-).innerHTML =
-data.hgQty;
+document.getElementById("bkQty")
+.innerHTML = data.bkQty;
 
-document.getElementById(
-"bkQty"
-).innerHTML =
-data.bkQty;
+document.getElementById("scannedQty")
+.innerHTML = data.scannedQty;
 
-document.getElementById(
-"scannedQty"
-).innerHTML =
-data.scannedQty;
+document.getElementById("hgScanned")
+.innerHTML = data.hgScanned;
 
-document.getElementById(
-"hgScanned"
-).innerHTML =
-data.hgScanned;
+document.getElementById("bkScanned")
+.innerHTML = data.bkScanned;
 
-document.getElementById(
-"bkScanned"
-).innerHTML =
-data.bkScanned;
+document.getElementById("pendingQty")
+.innerHTML = data.pendingQty;
 
-document.getElementById(
-"pendingQty"
-).innerHTML =
-data.pendingQty;
+document.getElementById("hgPending")
+.innerHTML = data.hgPending;
 
-document.getElementById(
-"hgPending"
-).innerHTML =
-data.hgPending;
-
-document.getElementById(
-"bkPending"
-).innerHTML =
-data.bkPending;
-
-// AREA
-
-data.areas.sort((a,b)=>{
-
-if(a.area < b.area) return -1;
-if(a.area > b.area) return 1;
-
-if(a.branch < b.branch) return -1;
-if(a.branch > b.branch) return 1;
-
-return 0;
-
-});
+document.getElementById("bkPending")
+.innerHTML = data.bkPending;
 
 let html = "";
 
@@ -929,15 +899,10 @@ html += `
 <tr>
 
 <td>${a.area}</td>
-
 <td>${a.branch}</td>
-
 <td>${a.qty}</td>
-
 <td>${a.scanned}</td>
-
 <td>${a.pending}</td>
-
 <td>${a.percent}%</td>
 
 </tr>
@@ -950,20 +915,6 @@ document
 .getElementById("areaTable")
 .innerHTML = html;
 
-// WARNA
-
-data.warnaSummary.sort((a,b)=>{
-
-if(a.area < b.area) return -1;
-if(a.area > b.area) return 1;
-
-if(a.kodeWarna < b.kodeWarna) return -1;
-if(a.kodeWarna > b.kodeWarna) return 1;
-
-return 0;
-
-});
-
 let warnaHtml = "";
 
 data.warnaSummary.forEach(w => {
@@ -973,15 +924,10 @@ warnaHtml += `
 <tr>
 
 <td>${w.area}</td>
-
 <td>${w.kodeWarna}</td>
-
 <td>${w.qty}</td>
-
 <td>${w.scanned}</td>
-
 <td>${w.pending}</td>
-
 <td>${w.percent}%</td>
 
 </tr>
@@ -997,9 +943,19 @@ warnaHtml;
 
 }
 
-// =========================
+catch(err){
+
+console.log(err);
+
+}
+
+}
+
+// =====================================
 // INIT
-// =========================
+// =====================================
+
+window.onload = function(){
 
 startScanner();
 
@@ -1009,6 +965,8 @@ setInterval(
 loadDashboard,
 5000
 );
+
+};
 
 </script>
 
